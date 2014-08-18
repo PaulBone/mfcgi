@@ -6,12 +6,21 @@
 :- module mfcgi.
 
 :- interface.
-:- import_module io.
 
-:- pred main(io::di, io::uo) is det.
+:- import_module bool.
+:- import_module io.
+:- import_module string.
+
+% accept a request from the client
+:- pred fcgx_accept(bool::out, io::di, io::uo) is det.
+
+% get a parameter from the environment array
+:- pred fcgx_get_param(string::in, string::out, io::di, io::uo) is det.
+
+% write a string to buffer
+:- pred fcgx_puts(string::in, bool::out, io::di, io::uo) is det.
 
 :- implementation.
-:- import_module bool, string.
 
 % Declarations ------------------------------------------------------------------
        
@@ -73,40 +82,7 @@
    FCGX_ParamArray envp;
   ").
 
-% NOTE: make a header type
-:- func header = string.
-header = "Content-Type: text/plain\n\n".
-
-% Single threaded demo ----------------------------------------------------------
-
-main(!IO) :-
-  fcgx_accept(Success, !IO),
-  (Success = yes ->
-     (fcgx_get_param("QUERY_STRING", Str, !IO),
-      fcgx_puts(header, _, !IO),
-      fcgx_puts(Str, _, !IO),
-      main(!IO))
-
-     ;
-     true
-  ).
-
-% Multi threaded demo -----------------------------------------------------------
-
 % API ---------------------------------------------------------------------------
-
-% get a parameter from the environment array
-:- pred fcgx_get_param(string::in, string::out, io::di, io::uo) is det.
-
-:- pragma foreign_proc("C", fcgx_get_param(Name::in, Result::out,
-  _IO0::di, _IO::uo),
-  [promise_pure, will_not_call_mercury, tabled_for_io],
-  "
-   Result = FCGX_GetParam(Name, envp);
-  ").
-
-% accept a request from the client
-:- pred fcgx_accept(bool::out, io::di, io::uo) is det.
 
 :- pragma foreign_proc("C", fcgx_accept(Success::out, _IO0::di, _IO::uo),
   [promise_pure, will_not_call_mercury, tabled_for_io],
@@ -114,8 +90,12 @@ main(!IO) :-
    Success = FCGX_Accept(&in, &out, &err, &envp) >= 0 ? MR_YES : MR_NO;
   ").
 
-% write a string to buffer
-:- pred fcgx_puts(string::in, bool::out, io::di, io::uo) is det.
+:- pragma foreign_proc("C", fcgx_get_param(Name::in, Result::out,
+  _IO0::di, _IO::uo),
+  [promise_pure, will_not_call_mercury, tabled_for_io],
+  "
+   Result = FCGX_GetParam(Name, envp);
+  ").
 
 :- pragma foreign_proc("C", fcgx_puts(Str::in, Success::out,
   _IO0::di, _IO::uo),

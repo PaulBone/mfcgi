@@ -1,0 +1,4 @@
+MCFLAGS=-O2
+
+LDFLAGS-mfcgi_test=-lfcgi
+
