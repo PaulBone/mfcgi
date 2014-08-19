@@ -1,5 +1,5 @@
 % Mercury-fcgi library binding
-% contains single thread and multi-thread parts of api
+% Contains thread-safe interface
 %
 % This binding is a simple wrapping of the C interface.
 %
