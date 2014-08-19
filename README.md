@@ -6,7 +6,7 @@ Copyright (c) 2014, Ebrahim Azarisooreh
 
 Copyright (c) 2014, Paul Bone
 
-Distributed under the terms of the BSD 3-clause license, see [LICENSE].
+Distributed under the terms of the BSD 3-clause license, see [LICENSE](LICENSE).
 
 + mfcgi.m
 
