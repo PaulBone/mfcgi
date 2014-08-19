@@ -16,6 +16,7 @@
 :- import_module string.
 
 :- import_module mfcgi.
+:- import_module mfcgi.basic.
 
 main(!IO) :-
     fcgx_accept(Success, !IO),

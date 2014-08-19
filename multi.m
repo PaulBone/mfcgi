@@ -5,14 +5,12 @@
 %
 % Authors: Ebrahim Azarisooreh, Paul Bone
 
-:- module mfcgi_multi.
+:- module multi.
 
 :- interface.
 
 :- import_module bool.
 :- import_module io.
-:- import_module maybe.
-:- import_module string.
 
 %--------------------------------------------------------------------------%
 % Thread safe interface.
@@ -34,6 +32,13 @@
   io::di, io::uo) is det.
 
 :- implementation.
+
+%--------------------------------------------------------------------------%
+
+:- pragma foreign_decl("C",
+"
+   #include \"fcgiapp.h\"
+").
 
 %--------------------------------------------------------------------------%
 
