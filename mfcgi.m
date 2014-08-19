@@ -1,9 +1,9 @@
 % Mercury-fcgi library binding
-% contains single thread and multi-thread parts of api
+% Contains basic interface
 %
 % This binding is a simple wrapping of the C interface.
 %
-% Authors: eazar001, Paul Bone
+% Authors: Ebrahim Azarisooreh, Paul Bone
 
 :- module mfcgi.
 
@@ -107,23 +107,6 @@
 %
 % Note that the filter related functions are not implemented.
 %
-
-%--------------------------------------------------------------------------%
-% Thread safe interface.
-%--------------------------------------------------------------------------%
-
-% finish request accepted by previous call to fcgx_accept
-% also frees any storage allocated by previous call
-:- pred fcgx_finish_r(c_pointer::in, io::di, io::uo) is det.
-
-% initialize FCGX library. This is called by fcgx_accept
-% but should be caleld when using fcgx_accept_r
-:- pred fcgx_init(bool::out, io::di, io::uo) is det.
-
-% thread safe
-% accept new request from HTTP server
-% 0 is success, -1 is error.
-:- pred fcgx_accept_r(bool::out, io::di, io::uo) is det.
 
 :- implementation.
 
@@ -283,85 +266,9 @@ fcgx_get_byte(Stream, Result, !IO) :-
 
 %--------------------------------------------------------------------------%
 
-
-
-
-% Declarations ------------------------------------------------------------------
-
-%:- pragma foreign_decl("C",
-%  "
-%   #include <assert.h>
-%   #include <errno.h>
-%   #include <fcntl.h>      /* for fcntl */
-%   #include <math.h>
-%   #include <memory.h>     /* for memchr() */
-%   #include <stdarg.h>
-%   #include <stdio.h>
-%   #include <stdlib.h>
-%   #include <string.h>
-%   #include <sys/types.h>
-%
-%   #include \"fcgi_config.h\"
-%
-%   #ifdef HAVE_SYS_SOCKET_H
-%   #include <sys/socket.h> /* for getpeername */
-%   #endif
-%
-%   #ifdef HAVE_SYS_TIME_H
-%   #include <sys/time.h>
-%   #endif
-%
-%   #ifdef HAVE_UNISTD_H
-%   #include <unistd.h>
-%   #endif
-%
-%   #ifdef HAVE_LIMITS_H
-%   #include <limits.h>
-%   #endif
-%
-%   #ifdef _WIN32
-%   #define DLLAPI  __declspec(dllexport)
-%   #endif
-%
-%   #include \"fcgimisc.h\"
-%   #include \"fastcgi.h\"
-%   #include \"fcgios.h\"
-%   #include \"fcgiapp.h\"
-%
-%   #ifdef HAVE_VA_ARG_LONG_DOUBLE_BUG
-%   #define LONG_DOUBLE double
-%   #else
-%   #define LONG_DOUBLE long double
-%   #endif
-%
-%   /*
-%    * Globals
-%    */
-%   static FCGX_Request the_request;
-%  ").
-
 :- pragma foreign_proc("C", fcgx_puts(Str::in, Success::out,
   _IO0::di, _IO::uo),
   [promise_pure, will_not_call_mercury, tabled_for_io],
   "
    Success = FCGX_PutStr(Str, strlen(Str), out) >= 0 ? MR_YES : MR_NO;
   ").
-
-:- pragma foreign_proc("C", fcgx_finish_r(ReqDataPtr::in, _IO0::di, _IO::uo),
-  [thread_safe, promise_pure, will_not_call_mercury, tabled_for_io],
-  "
-   FCGX_Finish_r((FCGX_Request *)ReqDataPtr);
-  ").
-
-:- pragma foreign_proc("C", fcgx_init(Success::out, _IO0::di, _IO::uo),
-  [promise_pure, will_not_call_mercury, tabled_for_io],
-  "
-   Success = FCGX_Init() == 0 ? MR_YES : MR_NO;
-  ").		
-
-:- pragma foreign_proc("C", fcgx_accept_r(Success::out, _IO0::di, _IO::uo),
-  [thread_safe, promise_pure, will_not_call_mercury, tabled_for_io],
-  "
-   Success = FCGX_Accept(&in, &out, &err, &envp) >= 0 ? MR_YES : MR_NO;		
-  ").
-
