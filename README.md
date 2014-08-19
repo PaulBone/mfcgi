@@ -2,7 +2,7 @@
 Fast CGI binding for Mercury
 ============================
 
-Copyright (c) 2014, eazar001
+Copyright (c) 2014, Ebrahim Azarisooreh
 
 Copyright (c) 2014, Paul Bone
 
