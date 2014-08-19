@@ -12,6 +12,7 @@
 
 :- import_module bool.
 :- import_module list.
+:- import_module maybe.
 :- import_module string.
 
 :- import_module mfcgi.
@@ -20,10 +21,16 @@ main(!IO) :-
     fcgx_accept(Success, !IO),
     (
         Success = yes,
-        fcgx_get_param("QUERY_STRING", Str, !IO),
+        fcgx_get_param("QUERY_STRING", MaybeStr, !IO),
         fcgx_puts(header, _, !IO),
-        fcgx_puts(format("Query string was ""%s""\n",
-            [s(Str)]), _, !IO),
+        (
+            MaybeStr = yes(Str),
+            fcgx_puts(format("Query string was ""%s""\n",
+                [s(Str)]), _, !IO)
+        ;
+            MaybeStr = no,
+            fcgx_puts("No query string\n", _, !IO)
+        ),
         main(!IO)
     ;
         Success = no
