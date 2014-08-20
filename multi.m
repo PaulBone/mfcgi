@@ -56,11 +56,15 @@
    FCGX_Finish_r((FCGX_Request *)ReqDataPtr);
   ").
 
+%--------------------------------------------------------------------------%
+
 :- pragma foreign_proc("C", fcgx_init(Success::out, _IO0::di, _IO::uo),
   [promise_pure, will_not_call_mercury, tabled_for_io],
   "
    Success = FCGX_Init() == 0 ? MR_YES : MR_NO;
   ").		
+
+%--------------------------------------------------------------------------%
 
 :- pragma foreign_proc("C", fcgx_accept_r(Success::out, ReqDataPtr::in,
   _IO0::di, _IO::uo),
@@ -68,6 +72,8 @@
   "
    Success = FCGX_Accept_r((FCGX_Request *)ReqDataPtr) >= 0 ? MR_YES : MR_NO;
   ").
+
+%--------------------------------------------------------------------------%
 
 :- pragma no_inline(fcgx_init_request/6).
 :- pragma foreign_proc("C", fcgx_init_request(Success::out, Request::out,
@@ -79,6 +85,8 @@
    Request = (MR_Word)&r;
   ").
 
+%--------------------------------------------------------------------------%
+
 :- pragma foreign_proc("C", fcgx_write(Str::in, Request::in, Success::out,
   _IO0::di, _IO::uo),
   [promise_pure, will_not_call_mercury, tabled_for_io],
@@ -86,6 +94,8 @@
    Success = FCGX_PutStr(Str, strlen(Str),
        ((FCGX_Request *)Request)->out) >= 0 ? MR_YES : MR_NO;
   ").
+
+%--------------------------------------------------------------------------%
 
 fcgx_get_param_r(Name, Request, MaybeParam, !IO) :-
     get_param_r(Name, Request, String, Result, !IO),
@@ -118,3 +128,4 @@ fcgx_get_param_r(Name, Request, MaybeParam, !IO) :-
         String = NULL;
     }
 ").
+
