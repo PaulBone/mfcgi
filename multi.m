@@ -62,11 +62,15 @@
    FCGX_Finish_r(ReqDataPtr);
   ").
 
+%--------------------------------------------------------------------------%
+
 :- pragma foreign_proc("C", fcgx_init(Success::out, _IO0::di, _IO::uo),
   [promise_pure, will_not_call_mercury, tabled_for_io],
   "
    Success = FCGX_Init() == 0 ? MR_YES : MR_NO;
   ").		
+
+%--------------------------------------------------------------------------%
 
 :- pragma foreign_proc("C", fcgx_accept_r(Success::out, ReqDataPtr::in,
   _IO0::di, _IO::uo),
