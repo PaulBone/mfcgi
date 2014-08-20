@@ -31,6 +31,9 @@
 :- pred fcgx_init_request(bool::out, c_pointer::out, int::in, int::in,
   io::di, io::uo) is det.
 
+% writing string to buffer in FCGX_Request struct 
+:- pred fcgx_write(string::in, c_pointer::in, bool::out, io::di, io::uo) is det.
+
 :- implementation.
 
 %--------------------------------------------------------------------------%
@@ -61,11 +64,21 @@
    Success = FCGX_Accept_r((FCGX_Request *)ReqDataPtr) >= 0 ? MR_YES : MR_NO;
   ").
 
+:- pragma no_inline(fcgx_init_request/6).
 :- pragma foreign_proc("C", fcgx_init_request(Success::out, Request::out,
   Sock::in, Flags::in, _IO0::di, _IO::uo),
   [promise_pure, will_not_call_mercury, tabled_for_io],
   "
-   FCGX_Request *r;
-   Success = FCGX_InitRequest(r, Sock, Flags) == 0 ? MR_YES : MR_NO;
-   Request = (MR_Word)r;
+   static FCGX_Request r;
+   Success = FCGX_InitRequest(&r, Sock, Flags) == 0 ? MR_YES : MR_NO;
+   Request = (MR_Word)&r;
   ").
+
+:- pragma foreign_proc("C", fcgx_write(Str::in, Request::in, Success::out,
+  _IO0::di, _IO::uo),
+  [promise_pure, will_not_call_mercury, tabled_for_io],
+  "
+   Success = FCGX_PutStr(Str, strlen(Str),
+       ((FCGX_Request *)Request)->out) >= 0 ? MR_YES : MR_NO;
+  ").
+
