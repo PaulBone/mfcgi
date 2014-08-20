@@ -10,6 +10,7 @@
 :- interface.
 
 :- import_module bool.
+:- import_module maybe.
 :- import_module io.
 
 %--------------------------------------------------------------------------%
@@ -33,6 +34,10 @@
 
 % writing string to buffer in FCGX_Request struct 
 :- pred fcgx_write(string::in, c_pointer::in, bool::out, io::di, io::uo) is det.
+
+% get the parameters
+:- pred fcgx_get_param_r(string::in, c_pointer::in, maybe(string)::uo,
+  io::di, io::uo) is det.
 
 :- implementation.
 
@@ -82,3 +87,34 @@
        ((FCGX_Request *)Request)->out) >= 0 ? MR_YES : MR_NO;
   ").
 
+fcgx_get_param_r(Name, Request, MaybeParam, !IO) :-
+    get_param_r(Name, Request, String, Result, !IO),
+    (
+        Result = yes,
+        MaybeParam = yes(String)
+    ;
+        Result = no,
+        MaybeParam = no
+    ).
+
+:- pred get_param_r(string::in, c_pointer::in, string::uo, bool::uo,
+  io::di, io::uo) is det.
+
+:- pragma foreign_proc("C",
+    get_param_r(Name::in, Request::in, String::uo, Result::uo, _IO2::di, _IO::uo),
+    [promise_pure, will_not_call_mercury, tabled_for_io],
+"
+    char *temp;
+
+    temp = FCGX_GetParam(Name, ((FCGX_Request *)Request)->envp);
+    if (temp != NULL) {
+        Result = MR_YES;
+        /*
+         * Duplicate the string so we can use it after calling fcgi_finish()
+         */
+        MR_make_aligned_string_copy(String, temp);
+    } else {
+        Result = MR_NO;
+        String = NULL;
+    }
+").
