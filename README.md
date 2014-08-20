@@ -10,7 +10,17 @@ Distributed under the terms of the BSD 3-clause license, see [LICENSE](LICENSE).
 
 + mfcgi.m
 
-  Main binding
+  Parent module of the library.
+  Use "make" to build this library.
+  Currently the makefile is not platform independent.
+
++ basic.m
+
+  Basic binding
+
++ multi.m
+
+  Thread safe binding
 
 + mfcgi\_test.m
 
