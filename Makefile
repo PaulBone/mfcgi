@@ -9,4 +9,3 @@ mfcgi_test : $(wildcard *.m)
 
 libmfcgi.so : $(wildcard *.m)
 	$(MMC) --make libmfcgi
-
