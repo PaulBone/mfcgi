@@ -20,22 +20,17 @@
 :- import_module mfcgi.multi.
 
 main(!IO) :-
-  fcgx_init(_, !IO),
-  fcgx_init_request(_, Request, 0, 0, !IO),
-  fcgx_accept_r(_, Request, !IO),
-  fcgx_write(header, Request, _, !IO),
-  fcgx_get_param_r("QUERY_STRING", Request, MaybeQuery, !IO),
-  (MaybeQuery = yes(Query) ->
-     fcgx_write(Query, Request, _, !IO)
-     ;
-     fcgx_write("No Query\n", Request, _, !IO)
-  ),
-  fcgx_finish_r(Request, !IO),
-  main(!IO).
+  init_and_accept(procedure, !IO),
+  spawn_threads(20, procedure, !IO).
 
+:- pred procedure(c_pointer::in, io::di, io::uo) is det.
+
+procedure(Request, !IO) :-
+  fcgx_write(header, Request, _, !IO),
+  get_param_r("QUERY_STRING", Request, String, _, !IO),
+  fcgx_write(String, Request, _, !IO).
 
 
 :- func header = string.
 
 header = "Content-Type: text/plain\n\n".
-

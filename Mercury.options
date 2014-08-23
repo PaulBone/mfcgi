@@ -1,6 +1,6 @@
 MCFLAGS=-O2
 
-LDFLAGS-mfcgi_test=-lfcgi
+LDFLAGS-mfcgi_test=-lfcgi -lpthread
 
-LDFLAGS-mfcgi_threadtest=-lfcgi
+LDFLAGS-mfcgi_threadtest=-lfcgi -lpthread
 
