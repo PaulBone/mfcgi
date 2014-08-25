@@ -39,10 +39,6 @@
 :- pred fcgx_get_param_r(string::in, c_pointer::in, maybe(string)::uo,
   io::di, io::uo) is det.
 
-% lower layer for accessing parameters
-:- pred get_param_r(string::in, c_pointer::in, string::uo, bool::uo,
-  io::di, io::uo) is det.
-
 % spawn N number of threads, passing request pointer and a 'subroutine'
 % predicate
 :- pred spawn_threads(int::in,
@@ -128,6 +124,8 @@ fcgx_get_param_r(Name, Request, MaybeParam, !IO) :-
         MaybeParam = no
     ).
 
+:- pred get_param_r(string::in, c_pointer::in, string::uo, bool::uo,
+  io::di, io::uo) is det.
 :- pragma foreign_proc("C",
     get_param_r(Name::in, Request::in, String::uo, Result::uo, _IO2::di, _IO::uo),
     [promise_pure, will_not_call_mercury, tabled_for_io],
@@ -169,10 +167,22 @@ fcgx_get_param_r(Name, Request, MaybeParam, !IO) :-
   init_and_accept(in(pred(in, di, uo) is det), di, uo), "init_and_accept").
 
 init_and_accept(Subroutine, !IO) :-
-  fcgx_init(_, !IO),
-  fcgx_init_request(_, Request, 0, 0, !IO),
-  run_proc(Request, Subroutine, !IO).
-
+  fcgx_init(Succ0, !IO),
+  (
+     Succ0 = yes ->
+     (
+        fcgx_init_request(Succ1, Request, 0, 0, !IO),
+        (
+           Succ1 = yes ->
+             run_proc(Request, Subroutine, !IO)
+        ;
+           true
+	)
+    )
+  ;
+     true
+  ).
+    
 %--------------------------------------------------------------------------%
 
 :- pred run_proc(c_pointer, pred(c_pointer, io, io), io, io) is det.
