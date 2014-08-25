@@ -60,10 +60,10 @@
 %--------------------------------------------------------------------------%
 
 :- pragma foreign_decl("C",
-"
+  "
    #include ""fcgiapp.h""
    #include <pthread.h>		      
-").
+  ").
 
 %--------------------------------------------------------------------------%
 
@@ -96,7 +96,7 @@
   Sock::in, Flags::in, _IO0::di, _IO::uo),
   [promise_pure, will_not_call_mercury, tabled_for_io],
   "
-   FCGX_Request *r = MR_GC_malloc_uncollectable(56);
+   FCGX_Request *r = MR_GC_malloc_uncollectable(sizeof(FCGX_Request));
 
    Success = FCGX_InitRequest(r, Sock, Flags) == 0 ? MR_YES : MR_NO;
    Request = (MR_Word)r;
@@ -147,7 +147,7 @@ fcgx_get_param_r(Name, Request, MaybeParam, !IO) :-
 
 %--------------------------------------------------------------------------%
 
-:- pragma foreign_proc("C",spawn_threads(Count::in,
+:- pragma foreign_proc("C", spawn_threads(Count::in,
   Subroutine::in(pred(in, di, uo) is det), _IO0::di, _IO::uo),
   [promise_pure, may_call_mercury, tabled_for_io],
   "
@@ -175,10 +175,10 @@ init_and_accept(Subroutine, !IO) :-
         (
            Succ1 = yes ->
              run_proc(Request, Subroutine, !IO)
-        ;
-           true
+           ;
+             true
 	)
-    )
+     )
   ;
      true
   ).
