@@ -33,10 +33,10 @@
   io::di, io::uo) is det.
 
 % writing string to buffer in FCGX_Request struct 
-:- pred fcgx_write(string::in, c_pointer::in, bool::out, io::di, io::uo) is det.
+:- pred fcgx_puts_t(string::in, c_pointer::in, bool::out, io::di, io::uo) is det.
 
 % get the parameters, and return result as maybe string
-:- pred fcgx_get_param_r(string::in, c_pointer::in, maybe(string)::uo,
+:- pred fcgx_get_param_t(string::in, c_pointer::in, maybe(string)::uo,
   io::di, io::uo) is det.
 
 % spawn N number of threads, passing request pointer and a 'subroutine'
@@ -104,7 +104,7 @@
 
 %--------------------------------------------------------------------------%
 
-:- pragma foreign_proc("C", fcgx_write(Str::in, Request::in, Success::out,
+:- pragma foreign_proc("C", fcgx_puts_t(Str::in, Request::in, Success::out,
   _IO0::di, _IO::uo),
   [promise_pure, will_not_call_mercury, tabled_for_io],
   "
@@ -114,8 +114,8 @@
 
 %--------------------------------------------------------------------------%
 
-fcgx_get_param_r(Name, Request, MaybeParam, !IO) :-
-    get_param_r(Name, Request, String, Result, !IO),
+fcgx_get_param_t(Name, Request, MaybeParam, !IO) :-
+    get_param_t(Name, Request, String, Result, !IO),
     (
         Result = yes,
         MaybeParam = yes(String)
@@ -124,10 +124,10 @@ fcgx_get_param_r(Name, Request, MaybeParam, !IO) :-
         MaybeParam = no
     ).
 
-:- pred get_param_r(string::in, c_pointer::in, string::uo, bool::uo,
+:- pred get_param_t(string::in, c_pointer::in, string::uo, bool::uo,
   io::di, io::uo) is det.
 :- pragma foreign_proc("C",
-    get_param_r(Name::in, Request::in, String::uo, Result::uo, _IO2::di, _IO::uo),
+    get_param_t(Name::in, Request::in, String::uo, Result::uo, _IO2::di, _IO::uo),
     [promise_pure, will_not_call_mercury, tabled_for_io],
 "
     char *temp;

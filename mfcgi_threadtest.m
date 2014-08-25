@@ -27,15 +27,15 @@ main(!IO) :-
 :- pred procedure(c_pointer::in, io::di, io::uo) is det.
 
 procedure(Request, !IO) :-
-  fcgx_write(header, Request, _, !IO),
-  fcgx_get_param_r("QUERY_STRING", Request, MaybeQuery, !IO),
+  fcgx_puts_t(header, Request, _, !IO),
+  fcgx_get_param_t("QUERY_STRING", Request, MaybeQuery, !IO),
   (
      MaybeQuery = yes(Query),
-     fcgx_write(format("Your query was ""%s""\n", [s(Query)]),
+     fcgx_puts_t(format("Your query was ""%s""\n", [s(Query)]),
        Request, _, !IO)
   ;
      MaybeQuery = no,
-     fcgx_write("No query string\n", Request, _, !IO)
+     fcgx_puts_t("No query string\n", Request, _, !IO)
   ).
 
 :- func header = string.
