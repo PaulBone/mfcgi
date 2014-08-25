@@ -5,7 +5,7 @@
 %
 % Authors: Ebrahim Azarisooreh, Paul Bone
 
-:- module multi.
+:- module threads.
 
 :- interface.
 
