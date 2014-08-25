@@ -17,7 +17,7 @@
 
 :- import_module mfcgi.
 :- import_module mfcgi.basic.
-:- import_module mfcgi.multi.
+:- import_module mfcgi.threads.
 
 main(!IO) :-
   init_and_accept(procedure, !IO),
