@@ -1,0 +1,9 @@
+
+*.a
+*.err
+*.init
+*.mh
+*.so
+*.swp
+Mercury
+tags
