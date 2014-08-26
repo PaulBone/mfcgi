@@ -20,17 +20,18 @@
 
 main(!IO) :-
     fcgx_accept(Success, !IO),
+    fcgx_get_output_stream(Out, !IO),
     (
         Success = yes,
         fcgx_get_param("QUERY_STRING", MaybeStr, !IO),
-        fcgx_puts(header, _, !IO),
+        fcgx_puts(header, Out, _, !IO),
         (
             MaybeStr = yes(Str),
             fcgx_puts(format("Query string was ""%s""\n",
-                [s(Str)]), _, !IO)
+                [s(Str)]), Out, _, !IO)
         ;
             MaybeStr = no,
-            fcgx_puts("No query string\n", _, !IO)
+            fcgx_puts("No query string\n", Out, _, !IO)
         ),
         main(!IO)
     ;

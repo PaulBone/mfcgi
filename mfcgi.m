@@ -8,6 +8,6 @@
 :- interface.
 
 :- include_module basic.
-:- include_module multi.
+:- include_module threads.
 
 

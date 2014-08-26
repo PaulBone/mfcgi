@@ -102,7 +102,7 @@
 
     % Write a string to the output buffer
     %
-:- pred fcgx_puts(string::in, bool::out, io::di, io::uo) is det.
+:- pred fcgx_puts(string::in, fcgi_stream::in, bool::out, io::di, io::uo) is det.
 
 %
 % Note that the filter related functions are not implemented.
@@ -112,7 +112,7 @@
 
 :- pragma foreign_decl("C",
 "
-   #include \"fcgiapp.h\"
+   #include ""fcgiapp.h""
 ").
 
 %--------------------------------------------------------------------------%
@@ -266,9 +266,9 @@ fcgx_get_byte(Stream, Result, !IO) :-
 
 %--------------------------------------------------------------------------%
 
-:- pragma foreign_proc("C", fcgx_puts(Str::in, Success::out,
+:- pragma foreign_proc("C", fcgx_puts(Str::in, Stream::in, Success::out,
   _IO0::di, _IO::uo),
   [promise_pure, will_not_call_mercury, tabled_for_io],
   "
-   Success = FCGX_PutStr(Str, strlen(Str), out) >= 0 ? MR_YES : MR_NO;
+   Success = FCGX_PutStr(Str, strlen(Str), Stream) >= 0 ? MR_YES : MR_NO;
   ").

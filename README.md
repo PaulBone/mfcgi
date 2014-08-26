@@ -22,8 +22,8 @@ Distributed under the terms of the BSD 3-clause license, see [LICENSE](LICENSE).
 
   Thread safe binding
 
-+ mfcgi\_test.m
++ mfcgi\_test.m, mfcgi\_threadtest.m
 
-  This is a test program.
-  Use "make" to build this program.
+  These are test programs for the basic and thread-safe interfaces.
+  Use "make" to build them.
 
