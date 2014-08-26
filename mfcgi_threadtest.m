@@ -20,8 +20,14 @@
 
 % spawn N (in this case 20) threads with procedure defined below
 main(!IO) :-
-  init_and_accept(procedure, !IO),
-  spawn_threads(20, procedure, !IO).  
+  fcgx_init(Success, !IO),
+  (
+     Success = yes ->
+       init_and_accept(procedure, !IO),
+       spawn_threads(20, procedure, !IO)
+     ;
+       true
+  ).
 
 % This is the main procedure user must create to inject into fcgi loop
 :- pred procedure(c_pointer::in, io::di, io::uo) is det.

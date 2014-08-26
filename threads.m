@@ -167,20 +167,12 @@ fcgx_get_param_t(Name, Request, MaybeParam, !IO) :-
   init_and_accept(in(pred(in, di, uo) is det), di, uo), "init_and_accept").
 
 init_and_accept(Subroutine, !IO) :-
-  fcgx_init(Succ0, !IO),
+  fcgx_init_request(Success, Request, 0, 0, !IO),
   (
-     Succ0 = yes ->
-     (
-        fcgx_init_request(Succ1, Request, 0, 0, !IO),
-        (
-           Succ1 = yes ->
-             run_proc(Request, Subroutine, !IO)
-           ;
-             true
-	)
-     )
-  ;
-     true
+     Success = yes ->
+       run_proc(Request, Subroutine, !IO)
+     ;
+       true
   ).
     
 %--------------------------------------------------------------------------%
