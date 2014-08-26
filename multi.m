@@ -37,8 +37,8 @@
 % writing string to buffer in FCGX_Request struct 
 :- pred fcgx_write(string::in, request::in, bool::out, io::di, io::uo) is det.
 
-% get the parameters
-:- pred fcgx_get_param_r(string::in, c_pointer::in, maybe(string)::uo,
+% get the parameters, and return result as maybe string
+:- pred fcgx_get_param_r(string::in, request::in, maybe(string)::uo,
   io::di, io::uo) is det.
 
 :- implementation.
@@ -47,7 +47,7 @@
 
 :- pragma foreign_decl("C",
 "
-   #include \"fcgiapp.h\"
+   #include ""fcgiapp.h""
 ").
 
 %--------------------------------------------------------------------------%
@@ -127,7 +127,8 @@ fcgx_get_param_r(Name, Request, MaybeParam, !IO) :-
         MaybeParam = no
     ).
 
-:- pred get_param_r(string::in, c_pointer::in, string::uo, bool::uo,
+% lower layer for accessing parameters
+:- pred get_param_r(string::in, request::in, string::uo, bool::uo,
   io::di, io::uo) is det.
 
 :- pragma foreign_proc("C",
@@ -136,7 +137,7 @@ fcgx_get_param_r(Name, Request, MaybeParam, !IO) :-
 "
     char *temp;
 
-    temp = FCGX_GetParam(Name, ((FCGX_Request *)Request)->envp);
+    temp = FCGX_GetParam(Name, Request->envp);
     if (temp != NULL) {
         Result = MR_YES;
         /*
