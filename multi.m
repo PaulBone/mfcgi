@@ -64,15 +64,16 @@
    Success = FCGX_Accept_r((FCGX_Request *)ReqDataPtr) >= 0 ? MR_YES : MR_NO;
   ").
 
-:- pragma no_inline(fcgx_init_request/6).
-:- pragma foreign_proc("C", fcgx_init_request(Success::out, Request::out,
-  Sock::in, Flags::in, _IO0::di, _IO::uo),
-  [promise_pure, will_not_call_mercury, tabled_for_io],
-  "
-   static FCGX_Request r;
-   Success = FCGX_InitRequest(&r, Sock, Flags) == 0 ? MR_YES : MR_NO;
-   Request = (MR_Word)&r;
-  ").
+:- pragma foreign_proc("C",
+    fcgx_init_request(Success::out, Request::out, Sock::in, Flags::in,
+        _IO0::di, _IO::uo),
+    [promise_pure, will_not_call_mercury, tabled_for_io],
+"
+    FCGX_Request *r = MR_NEW(FCGX_Request);
+
+    Success = FCGX_InitRequest(r, Sock, Flags) == 0 ? MR_YES : MR_NO;
+    Request = (MR_Word)r;
+").
 
 :- pragma foreign_proc("C", fcgx_write(Str::in, Request::in, Success::out,
   _IO0::di, _IO::uo),
