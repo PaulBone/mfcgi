@@ -17,20 +17,22 @@
 
 :- import_module mfcgi.
 :- import_module mfcgi.basic.
+:- import_module mfcgi.streams.
 
 main(!IO) :-
     fcgx_accept(Success, !IO),
     (
         Success = yes,
+        fcgx_get_output_stream(Output, !IO),
         fcgx_get_param("QUERY_STRING", MaybeStr, !IO),
-        fcgx_puts(header, _, !IO),
+        fcgx_puts(Output, header, _, !IO),
         (
             MaybeStr = yes(Str),
-            fcgx_puts(format("Query string was ""%s""\n",
+            fcgx_puts(Output, format("Query string was ""%s""\n",
                 [s(Str)]), _, !IO)
         ;
             MaybeStr = no,
-            fcgx_puts("No query string\n", _, !IO)
+            fcgx_puts(Output, "No query string\n", _, !IO)
         ),
         main(!IO)
     ;

@@ -22,6 +22,10 @@ Distributed under the terms of the BSD 3-clause license, see [LICENSE](LICENSE).
 
   Thread safe binding
 
++ streams.m
+
+  Stream code shared by the basic and thread safe bindings.
+
 + mfcgi\_test.m
 
   This is a test program.
