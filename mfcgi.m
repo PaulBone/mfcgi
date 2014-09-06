@@ -1,5 +1,4 @@
 % Mercury-fcgi library binding
-% Contains thread-safe interface
 %
 % Copyright (C) 2014 Ebrahim Azarisooreh
 % Copyright (C) 2014 Paul Bone

@@ -97,7 +97,7 @@ fcgx_is_cgi(IsCGI, !IO) :-
     int result;
 
     result = FCGX_Accept(&in, &out, &err, &envp);
-    
+
     Success = result == 0 ? MR_YES : MR_NO;
 ").
 
@@ -148,7 +148,7 @@ fcgx_get_param(Name, MaybeParam, !IO) :-
 :- pred get_param(string::in, string::uo, bool::uo, io::di, io::uo) is det.
 
 :- pragma foreign_proc("C",
-    get_param(Name::in, String::uo, Result::uo, _IO2::di, _IO::uo),
+    get_param(Name::in, String::uo, Result::uo, _IO0::di, _IO::uo),
     [promise_pure, will_not_call_mercury, tabled_for_io],
 "
     char *temp;

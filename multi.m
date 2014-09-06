@@ -30,14 +30,14 @@
 % but should be caleld when using fcgx_accept_r
 :- pred fcgx_init(bool::out, io::di, io::uo) is det.
 
-% accept new request from HTTP server, 0 is success, -1 is error (thread-safe)
+% accept new request from HTTP server.
 :- pred fcgx_accept_r(bool::out, request::in, io::di, io::uo) is det.
 
 % Initialize an FCGX_Request for use with FCGX_Accept_r()
 :- pred fcgx_init_request(maybe(request)::out, int::in, int::in,
   io::di, io::uo) is det.
 
-% writing string to buffer in FCGX_Request struct 
+% writing string to buffer in FCGX_Request struct
 :- pred fcgx_write(string::in, request::in, bool::out, io::di, io::uo) is det.
 
 % get the parameters, and return result as maybe string

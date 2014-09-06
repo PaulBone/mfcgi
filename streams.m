@@ -40,7 +40,7 @@
     --->    ok(ground)
     ;       eof.
 
-    % Attempt to read a byte from the input stream and returns it.  %
+    % Attempt to read a byte from the input stream and returns it.
     % NOTE that this wraps the FCGX_GetChar function of the FCGI API.
     % However its comment describes a byte, so in this API we name the
     % predicate using "Byte' and hope that this reduces confusion.  We hope
