@@ -93,7 +93,7 @@
 
 :- pragma foreign_proc("C",
     fcgx_set_exit_status(Stream::in, Status::in, _IO0::di, _IO::uo),
-    [promise_pure, will_not_call_mercury, tabled_for_io],
+    [promise_pure, will_not_call_mercury, tabled_for_io, thread_safe],
 "
     FCGX_SetExitStatus(Status, Stream);
 ").
@@ -114,7 +114,7 @@ fcgx_get_byte(Stream, Result, !IO) :-
 
 :- pragma foreign_proc("C",
     get_byte(Stream::in, Byte::out, Result::out, _IO0::di, _IO::uo),
-    [will_not_call_mercury, promise_pure, tabled_for_io],
+    [will_not_call_mercury, promise_pure, tabled_for_io, thread_safe],
 "
     Byte = FCGX_GetChar(Stream);
     if (Byte == EOF) {
@@ -128,7 +128,7 @@ fcgx_get_byte(Stream, Result, !IO) :-
 
 :- pragma foreign_proc("C",
     fcgx_unget_byte(Stream::in, Byte::in, Result::out, _IO0::di, _IO::uo),
-    [will_not_call_mercury, promise_pure, tabled_for_io],
+    [will_not_call_mercury, promise_pure, tabled_for_io, thread_safe],
 "
     int result = FCGX_UnGetChar(Byte, Stream);
     if (result == EOF) {
@@ -141,11 +141,11 @@ fcgx_get_byte(Stream, Result, !IO) :-
 %--------------------------------------------------------------------------%
 
 :- pragma foreign_proc("C", fcgx_puts(Stream::in, Str::in, Success::out,
-  _IO0::di, _IO::uo),
-  [promise_pure, will_not_call_mercury, tabled_for_io],
-  "
-   Success = FCGX_PutStr(Str, strlen(Str), Stream) >= 0 ? MR_YES : MR_NO;
-  ").
+    _IO0::di, _IO::uo),
+    [promise_pure, will_not_call_mercury, tabled_for_io, thread_safe],
+"
+    Success = FCGX_PutStr(Str, strlen(Str), Stream) >= 0 ? MR_YES : MR_NO;
+").
 
 %--------------------------------------------------------------------------%
 %--------------------------------------------------------------------------%

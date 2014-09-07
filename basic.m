@@ -84,7 +84,7 @@ fcgx_is_cgi(IsCGI, !IO) :-
 :- pred is_cgi(bool::out, io::di, io::uo) is det.
 
 :- pragma foreign_proc("C", is_cgi(Result::out, _IO0::di, _IO::uo),
-  [promise_pure, will_not_call_mercury, tabled_for_io],
+   [promise_pure, will_not_call_mercury, tabled_for_io, thread_safe],
 "
    Result = FCGX_IsCGI() ? MR_YES : MR_NO;
 ").		
