@@ -1,7 +1,10 @@
 % Mercury-fcgi library binding
 % Contains thread-safe interface
 %
-% Authors: Ebrahim Azarisooreh, Paul Bone
+% Copyright (C) 2014 Ebrahim Azarisooreh
+% Copyright (C) 2014 Paul Bone
+% Distributed under the BSD 3-clause license, see LICENSE.
+%
 
 :- module mfcgi.
 

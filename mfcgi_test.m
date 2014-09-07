@@ -1,5 +1,10 @@
 % FCGI Single threaded demo
 %
+% Copyright (C) 2014 Ebrahim Azarisooreh
+% Copyright (C) 2014 Paul Bone
+% Distributed under the BSD 3-clause license, see LICENSE.
+%
+
 :- module mfcgi_test.
 
 :- interface.
